@@ -1,0 +1,12 @@
+CREATE SEQUENCE  "PELATIHAN"."SEQ_PENGGUNA"  MINVALUE 1 MAXVALUE 9999999999999999999999999999 INCREMENT BY 1 START WITH 30 CACHE 20 NOORDER  NOCYCLE ;
+
+create or replace TRIGGER TRG_PENGGUNA
+    BEFORE INSERT ON PENGGUNA 
+    FOR EACH ROW
+BEGIN
+  if inserting then 
+      if :NEW."ID" is null then 
+         select SEQ_PENGGUNA.nextval into :NEW."ID" from dual; 
+      end if; 
+   end if; 
+END;
