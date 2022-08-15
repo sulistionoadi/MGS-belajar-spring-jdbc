@@ -11,7 +11,11 @@ public class JabatanMapper implements RowMapper<JabatanDto>{
 
 	@Override
 	public JabatanDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-		JabatanDto dto = new JabatanDto();
+//		JabatanDto dto = new JabatanDto(
+//				rs.getLong("ID"),
+//				rs.getString("NAMA_JABATAN"),
+//				false); //membuat object Jabatan Baru
+		JabatanDto dto = new JabatanDto(); //membuat object Jabatan Baru
 		dto.setId(rs.getLong("ID"));
 		dto.setNamaJabatan(rs.getString("NAMA_JABATAN"));
 		
