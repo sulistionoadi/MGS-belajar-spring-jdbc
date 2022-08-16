@@ -2,13 +2,13 @@ package mgs.training.springboot.belajarjdbc.service;
 
 import java.util.List;
 
-import org.springframework.lang.NonNull;
-
 import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
 
 public interface JabatanService {
 
 	public void save(JabatanDto dto);
-	public List<JabatanDto> getData(String filter);
+//	public void update(JabatanDto dto);
+//	public void delete(Long id);
+	public List<JabatanDto> getData(String filter, int page, int size);
 
 }

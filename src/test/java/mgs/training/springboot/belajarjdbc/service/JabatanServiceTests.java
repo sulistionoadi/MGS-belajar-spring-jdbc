@@ -2,21 +2,25 @@ package mgs.training.springboot.belajarjdbc.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Service;
 
 import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
 
 @SpringBootTest
 public class JabatanServiceTests {
 
-	@Autowired JabatanService service;
+	@Autowired 
+	@Qualifier("jabatanPlsqlService")
+	JabatanService service;
 	
 	@Test
 	public void getData() {
-		service.getData(null);
+		service.getData(null, 0, 10);
 	}
 	
-	@Test
+	//@Test
 	public void saveData() {
 		JabatanDto dto = new JabatanDto();
 //		dto.setNamaJabatan("DEBUGER");

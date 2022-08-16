@@ -1,13 +1,10 @@
 package mgs.training.springboot.belajarjdbc.service.impl;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.sql.DataSource;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -15,7 +12,6 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import mgs.training.springboot.belajarjdbc.dto.CustomException;
@@ -24,7 +20,7 @@ import mgs.training.springboot.belajarjdbc.mapper.JabatanMapper;
 import mgs.training.springboot.belajarjdbc.service.JabatanService;
 import oracle.jdbc.OracleTypes;
 
-@Service
+@Service("jabatanPlsqlService")
 public class JabatanServiceImpl implements JabatanService {
 
 	@Autowired private DataSource dataSource;
@@ -53,17 +49,22 @@ public class JabatanServiceImpl implements JabatanService {
 	}
 
 	@Override
-	public List<JabatanDto> getData(String filter) {
+	public List<JabatanDto> getData(String filter, int page, int size) {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
 				.withCatalogName("PKG_JABATAN")
 				.withProcedureName("get_data")
 				.returningResultSet("p_out_data", new JabatanMapper());
 		
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_nama", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_start", OracleTypes.NUMBER));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_end", OracleTypes.NUMBER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errmsg", OracleTypes.VARCHAR));
 		
-		SqlParameterSource inParam = new MapSqlParameterSource().addValue("p_in_nama", filter);
+		SqlParameterSource inParam = new MapSqlParameterSource()
+				.addValue("p_in_nama", filter)
+				.addValue("p_in_start", (page*size) + 1)
+				.addValue("p_in_end", (page+1) * size);
 		
 		Map<String, Object> result = jdbcCall.execute(inParam);
 		System.out.println("Result Code = " + result.get("p_out_errcode"));
