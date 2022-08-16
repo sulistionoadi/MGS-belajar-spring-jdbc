@@ -82,4 +82,49 @@ public class JabatanServiceImpl implements JabatanService {
 		return data;
 	}
 
+	@Override
+	public void update(JabatanDto dto) {
+		if(Objects.isNull(dto)) {
+			throw new CustomException("Missing object dto");
+		}
+		
+		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
+				.withCatalogName("PKG_JABATAN")
+				.withProcedureName("update_jabatan");
+		
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_id", OracleTypes.NUMBER));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_nama", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
+		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errmsg", OracleTypes.VARCHAR));
+		
+		SqlParameterSource inParam = new MapSqlParameterSource()
+				.addValue("p_in_id", dto.getId())
+				.addValue("p_in_nama", dto.getNamaJabatan());
+		
+		Map<String, Object> result = jdbcCall.execute(inParam);
+		if((Integer) result.get("p_out_errcode") != 0) {
+			//throw new Exception(MessageFormat.format("Save Error Code:{0} Message:{1}", result.get("p_out_errcode"), result.get("p_out_errmsg")));
+			throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+		}
+	}
+
+	@Override
+	public void delete(Long id) {
+		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
+				.withCatalogName("PKG_JABATAN")
+				.withProcedureName("delete_jabatan");
+		
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_id", OracleTypes.NUMBER));
+		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
+		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errmsg", OracleTypes.VARCHAR));
+		
+		SqlParameterSource inParam = new MapSqlParameterSource().addValue("p_in_id", id);
+		
+		Map<String, Object> result = jdbcCall.execute(inParam);
+		if((Integer) result.get("p_out_errcode") != 0) {
+			//throw new Exception(MessageFormat.format("Save Error Code:{0} Message:{1}", result.get("p_out_errcode"), result.get("p_out_errmsg")));
+			throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+		}
+	}
+
 }

@@ -12,10 +12,11 @@ import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
 public class JabatanServiceTests {
 
 	@Autowired 
+	//@Qualifier("jabatanJpaService")
 	@Qualifier("jabatanPlsqlService")
 	JabatanService service;
 	
-	@Test
+//	@Test
 	public void getData() {
 		service.getData(null, 0, 10);
 	}
@@ -34,6 +35,30 @@ public class JabatanServiceTests {
 			e.printStackTrace();
 		} finally {
 			System.out.println("Selesai menjalankan method");
+		}
+	}
+	
+	@Test
+	public void updateData() {
+		JabatanDto dto = new JabatanDto();
+		dto.setId(32L);
+		dto.setNamaJabatan("OPERATOR");
+		
+		try {
+			service.update(dto);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void deleteData() {
+		try {
+			service.delete(43L);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	

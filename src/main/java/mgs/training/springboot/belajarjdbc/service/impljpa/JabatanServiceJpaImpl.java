@@ -2,6 +2,7 @@ package mgs.training.springboot.belajarjdbc.service.impljpa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import mgs.training.springboot.belajarjdbc.dao.JabatanDao;
+import mgs.training.springboot.belajarjdbc.dto.CustomException;
 import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
 import mgs.training.springboot.belajarjdbc.entity.JabatanEntity;
 import mgs.training.springboot.belajarjdbc.service.JabatanService;
@@ -45,6 +47,29 @@ public class JabatanServiceJpaImpl implements JabatanService {
 			listDto.add(dto);
 		});
 		return listDto;
+	}
+
+	@Override
+	public void update(JabatanDto dto) {
+		Optional<JabatanEntity> exist = dao.findById(dto.getId());
+		if(!exist.isPresent()) {
+			throw new CustomException("Data tidak ditemukan");
+		}
+		
+		JabatanEntity entity = exist.get();
+		entity.setNamaJabatan(dto.getNamaJabatan());
+		
+		dao.save(entity);
+	}
+
+	@Override
+	public void delete(Long id) {
+		Optional<JabatanEntity> exist = dao.findById(id);
+		if(!exist.isPresent()) {
+			throw new CustomException("Data tidak ditemukan");
+		}
+		
+		dao.delete(exist.get());
 	}
 
 }
