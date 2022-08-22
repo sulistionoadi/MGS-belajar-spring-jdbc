@@ -59,15 +59,22 @@ create or replace PACKAGE BODY PKG_JABATAN AS
                    p_in_end IN NUMBER,
                    p_out_errcode OUT NUMBER,
                    p_out_errmsg OUT VARCHAR2, 
+                   p_out_totalel OUT NUMBER, 
                    p_out_data OUT ref_cursor) AS
+        v_count NUMBER;
   BEGIN
     p_out_errcode := 0;
     p_out_errmsg := 'Successful';
+    
+    SELECT COUNT(*) INTO v_count FROM JABATAN 
+    WHERE (p_in_nama is null or lower(nama_jabatan) like '%' || lower(p_in_nama) || '%');
+    p_out_totalel := v_count;
     
     OPEN p_out_data FOR
     SELECT * FROM (
         SELECT ROWNUM rn, ID, nama_jabatan, is_active FROM JABATAN 
         WHERE (p_in_nama is null or lower(nama_jabatan) like '%' || lower(p_in_nama) || '%')
+        ORDER BY ID DESC
     ) data WHERE data.rn >= p_in_start AND data.rn <= p_in_end ;
     
     EXCEPTION  -- exception handlers begin

@@ -25,6 +25,7 @@ create or replace PACKAGE PKG_JABATAN AS
                    p_in_end IN NUMBER,
                    p_out_errcode OUT NUMBER,
                    p_out_errmsg OUT VARCHAR2, 
+                   p_out_totalel OUT NUMBER, 
                    p_out_data OUT ref_cursor);
                    
 END PKG_JABATAN;
