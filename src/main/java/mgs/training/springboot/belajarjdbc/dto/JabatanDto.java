@@ -23,7 +23,7 @@ public class JabatanDto implements Comparable<JabatanDto>{
 	private Long id;
 	
 	@NotBlank(message="Nama Jabatan harus diisi")
-	@Pattern(regexp = "^[a-zA-Z0-9 '.-]{1,50}$", message = "Invalid Jabatan Name")
+	@Pattern(regexp = "^[a-zA-Z0-9 ]{1,50}$", message = "Invalid Jabatan Name")
 	private String namaJabatan;
 	private Boolean active;
 	
@@ -35,6 +35,30 @@ public class JabatanDto implements Comparable<JabatanDto>{
 	public JabatanDto(Long id, String namaJabatan, Boolean active) {
 		this.id = id;
 		this.namaJabatan = namaJabatan;
+		this.active = active;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNamaJabatan() {
+		return namaJabatan;
+	}
+
+	public void setNamaJabatan(String namaJabatan) {
+		this.namaJabatan = namaJabatan;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
 		this.active = active;
 	}
 	
@@ -60,29 +84,6 @@ public class JabatanDto implements Comparable<JabatanDto>{
 		return id.compareTo(o.getId());
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNamaJabatan() {
-		return namaJabatan;
-	}
-
-	public void setNamaJabatan(String namaJabatan) {
-		this.namaJabatan = namaJabatan;
-	}
-
-	public Boolean isActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
 
 	@Override
 	public String toString() {

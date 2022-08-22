@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
@@ -18,7 +19,7 @@ public class JabatanServiceTests {
 	
 //	@Test
 	public void getData() {
-		service.getData(null, 0, 10);
+		service.getData(null, PageRequest.of(0, 10));
 	}
 	
 	//@Test

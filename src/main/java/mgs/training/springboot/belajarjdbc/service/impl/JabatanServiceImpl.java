@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import mgs.training.springboot.belajarjdbc.dto.CustomException;
 import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
+import mgs.training.springboot.belajarjdbc.dto.http.HttpPagedModel;
+import mgs.training.springboot.belajarjdbc.dto.http.HttpRespModel;
 import mgs.training.springboot.belajarjdbc.mapper.JabatanMapper;
 import mgs.training.springboot.belajarjdbc.service.JabatanService;
 import oracle.jdbc.OracleTypes;
@@ -26,7 +29,7 @@ public class JabatanServiceImpl implements JabatanService {
 	@Autowired private DataSource dataSource;
 	
 	@Override
-	public void save(JabatanDto dto) {
+	public HttpRespModel save(JabatanDto dto) {
 		if(Objects.isNull(dto)) {
 			throw new CustomException("Missing object dto");
 		}
@@ -44,12 +47,15 @@ public class JabatanServiceImpl implements JabatanService {
 		Map<String, Object> result = jdbcCall.execute(inParam);
 		if((Integer) result.get("p_out_errcode") != 0) {
 			//throw new Exception(MessageFormat.format("Save Error Code:{0} Message:{1}", result.get("p_out_errcode"), result.get("p_out_errmsg")));
-			throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+			//throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+			return HttpRespModel.error((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
 		}
+		
+		return HttpRespModel.ok(null, ((String) result.get("p_out_errmsg")));
 	}
 
 	@Override
-	public List<JabatanDto> getData(String filter, int page, int size) {
+	public HttpPagedModel<JabatanDto> getData(String filter, Pageable page) {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
 				.withCatalogName("PKG_JABATAN")
 				.withProcedureName("get_data")
@@ -58,13 +64,14 @@ public class JabatanServiceImpl implements JabatanService {
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_nama", OracleTypes.VARCHAR));
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_start", OracleTypes.NUMBER));
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_end", OracleTypes.NUMBER));
+		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_totalel", OracleTypes.INTEGER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errmsg", OracleTypes.VARCHAR));
 		
 		SqlParameterSource inParam = new MapSqlParameterSource()
 				.addValue("p_in_nama", filter)
-				.addValue("p_in_start", (page*size) + 1)
-				.addValue("p_in_end", (page+1) * size);
+				.addValue("p_in_start", ( page.getPageNumber() * page.getPageSize() ) + 1)
+				.addValue("p_in_end", ( page.getPageNumber() + 1 ) * page.getPageSize());
 		
 		Map<String, Object> result = jdbcCall.execute(inParam);
 		System.out.println("Result Code = " + result.get("p_out_errcode"));
@@ -79,11 +86,11 @@ public class JabatanServiceImpl implements JabatanService {
 			});
 		}
 		
-		return data;
+		return HttpPagedModel.ok(data, ((String) result.get("p_out_errmsg")), page.getPageSize(), (Integer) result.get("p_out_totalel"));
 	}
 
 	@Override
-	public void update(JabatanDto dto) {
+	public HttpRespModel update(JabatanDto dto) {
 		if(Objects.isNull(dto)) {
 			throw new CustomException("Missing object dto");
 		}
@@ -104,12 +111,14 @@ public class JabatanServiceImpl implements JabatanService {
 		Map<String, Object> result = jdbcCall.execute(inParam);
 		if((Integer) result.get("p_out_errcode") != 0) {
 			//throw new Exception(MessageFormat.format("Save Error Code:{0} Message:{1}", result.get("p_out_errcode"), result.get("p_out_errmsg")));
-			throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+			//throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+			return HttpRespModel.error((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
 		}
+		return HttpRespModel.ok(null, ((String) result.get("p_out_errmsg")));
 	}
 
 	@Override
-	public void delete(Long id) {
+	public HttpRespModel delete(Long id) {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
 				.withCatalogName("PKG_JABATAN")
 				.withProcedureName("delete_jabatan");
@@ -123,8 +132,10 @@ public class JabatanServiceImpl implements JabatanService {
 		Map<String, Object> result = jdbcCall.execute(inParam);
 		if((Integer) result.get("p_out_errcode") != 0) {
 			//throw new Exception(MessageFormat.format("Save Error Code:{0} Message:{1}", result.get("p_out_errcode"), result.get("p_out_errmsg")));
-			throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+			//throw new CustomException((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
+			return HttpRespModel.error((Integer) result.get("p_out_errcode"), (String) result.get("p_out_errmsg"));
 		}
+		return HttpRespModel.ok(null, ((String) result.get("p_out_errmsg")));
 	}
 
 }
