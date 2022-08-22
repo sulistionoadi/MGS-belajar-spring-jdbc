@@ -63,4 +63,13 @@ public class JabatanController {
 		return jabatanService.delete(id);
 	}
 	
+	@PostMapping("/form")
+	public HttpRespModel<JabatanDto> saveFormData(@Valid JabatanDto dto){
+		if(dto.getId() != null) {
+			return jabatanService.update(dto);
+		} else {
+			return jabatanService.save(dto);			
+		}
+	}
+	
 }
