@@ -8,33 +8,45 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "MASTER_WILAYAH")
+@Table(name = "MASTER_UNIT")
 //@Getter @Setter
 @ToString
-@NoArgsConstructor
-public class MasterWilayahEntity {
+//@NoArgsConstructor
+public class MasterUnitEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wilayah_sequence")
-    @SequenceGenerator(sequenceName = "SEQ_MST_WILAYAH", allocationSize = 1, name = "wilayah_sequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "unit_sequence")
+    @SequenceGenerator(sequenceName = "SEQ_MST_UNIT", allocationSize = 1, name = "unit_sequence")
 	@Column(name="ID")
 	private Long id;
 	
-	@Column(name="KODE_WIL", length = 20)
+	@Column(name="KODE_UNIT", length = 20)
 	private String kode;
 	
-	@Column(name="NAMA_WIL", length = 50)
+	@Column(name="NAMA_UNIT", length = 50)
 	private String nama;
 	
 	@Column(name="IS_ACTIVE", columnDefinition = "NUMBER(1)")
 	private Boolean active;
 
+	public MasterUnitEntity() {
+	}
+	
+	@Builder
+	public MasterUnitEntity(Long id, String kode, String nama, Boolean active) {
+		this.id = id;
+		this.kode = kode;
+		this.nama = nama;
+		this.active = active;
+	}
+	
 	public Long getId() {
 		return id;
 	}

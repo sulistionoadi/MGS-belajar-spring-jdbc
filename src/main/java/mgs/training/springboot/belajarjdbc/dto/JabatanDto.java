@@ -5,6 +5,19 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import mgs.training.springboot.belajarjdbc.entity.JabatanEntity;
+
+//@Getter @Setter
+//@ToString
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@Builder
 public class JabatanDto implements Comparable<JabatanDto>{
 
 	private Long id;
@@ -12,45 +25,19 @@ public class JabatanDto implements Comparable<JabatanDto>{
 	@NotBlank(message="Nama Jabatan harus diisi")
 	@Pattern(regexp = "^[a-zA-Z0-9 '.-]{1,50}$", message = "Invalid Jabatan Name")
 	private String namaJabatan;
-	private boolean active;
-	
-	//Constructor
-	public JabatanDto(Long id, String namaJabatan, boolean active) {
-		this.id = id;
-		this.namaJabatan = namaJabatan;
-		this.active = active;
-	}
+	private Boolean active;
 	
 	public JabatanDto() {
-	}
-
-	//Method
-	public Long getId() {
-		return id;
+		super();
 	}
 	
-	public void setId(Long id) {
+	@Builder
+	public JabatanDto(Long id, String namaJabatan, Boolean active) {
 		this.id = id;
-	}
-	
-	public String getNamaJabatan() {
-		return namaJabatan;
-	}
-	public void setNamaJabatan(String namaJabatan) {
 		this.namaJabatan = namaJabatan;
-	}
-	public boolean isActive() {
-		return active;
-	}
-	public void setActive(boolean active) {
 		this.active = active;
 	}
 	
-	@Override
-	public String toString() {
-		return "JabatanDto [id=" + id + ", namaJabatan=" + namaJabatan + ", active=" + active + "]";
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -70,7 +57,36 @@ public class JabatanDto implements Comparable<JabatanDto>{
 
 	@Override
 	public int compareTo(JabatanDto o) {
-		return this.getId().compareTo(o.getId());
+		return id.compareTo(o.getId());
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNamaJabatan() {
+		return namaJabatan;
+	}
+
+	public void setNamaJabatan(String namaJabatan) {
+		this.namaJabatan = namaJabatan;
+	}
+
+	public Boolean isActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	@Override
+	public String toString() {
+		return "JabatanDto [id=" + id + ", namaJabatan=" + namaJabatan + ", active=" + active + "]";
 	}
 	
 }
