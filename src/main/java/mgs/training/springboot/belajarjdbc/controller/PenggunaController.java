@@ -27,7 +27,7 @@ public class PenggunaController {
 
 	private final PenggunaService penggunaService;
 	
-	public PenggunaController(@Qualifier("penggunaPlsqlService") PenggunaService penggunaService) {
+	public PenggunaController(@Qualifier("penggunaJpaService") PenggunaService penggunaService) {
 		this.penggunaService = penggunaService;
 	}
 

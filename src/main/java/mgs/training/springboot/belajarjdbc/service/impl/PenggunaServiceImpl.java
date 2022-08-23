@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import mgs.training.springboot.belajarjdbc.dto.CustomException;
@@ -27,6 +29,7 @@ import oracle.jdbc.OracleTypes;
 public class PenggunaServiceImpl implements PenggunaService {
 
 	@Autowired private DataSource dataSource;
+	@Autowired private PasswordEncoder encoder;
 	
 	@Override
 	public HttpRespModel save(PenggunaDto dto) {
@@ -47,7 +50,7 @@ public class PenggunaServiceImpl implements PenggunaService {
 		
 		SqlParameterSource inParam = new MapSqlParameterSource()
 				.addValue("p_in_username", dto.getUsername())
-				.addValue("p_in_password", dto.getPassword())
+				.addValue("p_in_password", encoder.encode(dto.getPassword()))
 				.addValue("p_in_jabatan", dto.getJabatan().getId())
 				.addValue("p_in_unit", dto.getUnit().getId());
 		
@@ -114,10 +117,15 @@ public class PenggunaServiceImpl implements PenggunaService {
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errmsg", OracleTypes.VARCHAR));
 		
+		String password = "";
+		if(StringUtils.isNotBlank(dto.getPassword())) {
+			password = encoder.encode(dto.getPassword());
+		}
+		
 		SqlParameterSource inParam = new MapSqlParameterSource()
 				.addValue("p_in_id", dto.getId())
 				.addValue("p_in_username", dto.getUsername())
-				.addValue("p_in_password", dto.getPassword())
+				.addValue("p_in_password", password)
 				.addValue("p_in_jabatan", dto.getJabatan().getId())
 				.addValue("p_in_unit", dto.getUnit().getId());
 		

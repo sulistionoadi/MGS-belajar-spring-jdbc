@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,18 +30,23 @@ public class PenggunaServiceJpaImpl implements PenggunaService {
 	private PenggunaMapper mapper;
 	private JabatanDao jabatanDao;
 	private MasterUnitDao unitDao;
+	private PasswordEncoder encoder;
 	
 	@Autowired
 	public PenggunaServiceJpaImpl(PenggunaDao dao, PenggunaMapper mapper, JabatanDao jabatanDao,
-			MasterUnitDao unitDao) {
+			MasterUnitDao unitDao, PasswordEncoder encoder) {
 		this.dao = dao;
 		this.mapper = mapper;
 		this.jabatanDao = jabatanDao;
 		this.unitDao = unitDao;
+		this.encoder = encoder;
 	}
 
 	@Override
 	public HttpRespModel save(PenggunaDto dto) {
+		if(org.apache.commons.lang3.StringUtils.isNotBlank(dto.getPassword())) {
+			dto.setPassword(encoder.encode(dto.getPassword()));
+		}
 		PenggunaEntity toSave = mapper.toEntity(dto);
 		
 		Optional<JabatanEntity> opJabatan = jabatanDao.findById(dto.getJabatan().getId());
@@ -76,6 +81,12 @@ public class PenggunaServiceJpaImpl implements PenggunaService {
 		Optional<MasterUnitEntity> opUnit = unitDao.findById(dto.getUnit().getId());
 		if(opUnit.isEmpty()) {
 			throw new CustomException("Unit dengan id:"+dto.getJabatan().getId()+" tidak ditemukan");
+		}
+		
+		if(org.apache.commons.lang3.StringUtils.isNotBlank(dto.getPassword())) {
+			toSave.setPassword(encoder.encode(dto.getPassword()));
+		} else {
+			toSave.setPassword(exist.get().getPassword());
 		}
 		
 		toSave.setJabatan(opJabatan.get());
