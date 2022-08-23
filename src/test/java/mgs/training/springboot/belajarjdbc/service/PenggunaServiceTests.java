@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.PageRequest;
 
 import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
 import mgs.training.springboot.belajarjdbc.dto.MasterUnitDto;
 import mgs.training.springboot.belajarjdbc.dto.PenggunaDto;
+import mgs.training.springboot.belajarjdbc.dto.http.HttpPagedModel;
 
 @SpringBootTest
 @ComponentScan(basePackages = {
@@ -28,8 +30,9 @@ public class PenggunaServiceTests {
 	
 	@Test
 	public void getData() {
-		List<PenggunaDto> list = service.getData(null);
-		list.stream().forEach(dto -> {
+		PageRequest pr = PageRequest.of(0, 10);
+		HttpPagedModel<PenggunaDto> list = service.getData(null, pr);
+		list.getData().stream().forEach(dto -> {
 			System.out.println("\n--- Print Data ---");
 			System.out.println("-> " + dto.toString());
 			

@@ -48,7 +48,7 @@ public class JabatanServiceJpaImpl implements JabatanService {
 			System.out.println(" -> " + dto.toString());
 			listDto.add(dto);
 		});
-		return HttpPagedModel.ok(listDto, listData.getSize(), listData.getTotalElements());
+		return HttpPagedModel.ok(listDto, listData.getNumberOfElements(), listData.getTotalElements());
 	}
 
 	@Override

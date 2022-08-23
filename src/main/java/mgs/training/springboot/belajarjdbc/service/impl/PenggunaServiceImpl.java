@@ -16,33 +16,40 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 
 import mgs.training.springboot.belajarjdbc.dto.CustomException;
-import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
+import mgs.training.springboot.belajarjdbc.dto.PenggunaDto;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpPagedModel;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpRespModel;
-import mgs.training.springboot.belajarjdbc.mapper.JabatanMapper;
-import mgs.training.springboot.belajarjdbc.service.JabatanService;
+import mgs.training.springboot.belajarjdbc.mapper.PenggunaMapper;
+import mgs.training.springboot.belajarjdbc.service.PenggunaService;
 import oracle.jdbc.OracleTypes;
 
-@Service("jabatanPlsqlService")
-public class JabatanServiceImpl implements JabatanService {
+@Service("penggunaPlsqlService")
+public class PenggunaServiceImpl implements PenggunaService {
 
 	@Autowired private DataSource dataSource;
 	
 	@Override
-	public HttpRespModel save(JabatanDto dto) {
+	public HttpRespModel save(PenggunaDto dto) {
 		if(Objects.isNull(dto)) {
 			throw new CustomException("Missing object dto");
 		}
 		
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
-				.withCatalogName("PKG_JABATAN")
-				.withProcedureName("save_jabatan");
+				.withCatalogName("PKG_PENGGUNA")
+				.withProcedureName("save_pengguna");
 		
-		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_nama", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_username", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_password", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_jabatan", OracleTypes.NUMBER));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_unit", OracleTypes.NUMBER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errmsg", OracleTypes.VARCHAR));
 		
-		SqlParameterSource inParam = new MapSqlParameterSource().addValue("p_in_nama", dto.getNamaJabatan());
+		SqlParameterSource inParam = new MapSqlParameterSource()
+				.addValue("p_in_username", dto.getUsername())
+				.addValue("p_in_password", dto.getPassword())
+				.addValue("p_in_jabatan", dto.getJabatan().getId())
+				.addValue("p_in_unit", dto.getUnit().getId());
 		
 		Map<String, Object> result = jdbcCall.execute(inParam);
 		if((Integer) result.get("p_out_errcode") != 0) {
@@ -55,11 +62,11 @@ public class JabatanServiceImpl implements JabatanService {
 	}
 
 	@Override
-	public HttpPagedModel<JabatanDto> getData(String filter, Pageable page) {
+	public HttpPagedModel<PenggunaDto> getData(String filter, Pageable page) {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
-				.withCatalogName("PKG_JABATAN")
+				.withCatalogName("PKG_PENGGUNA")
 				.withProcedureName("get_data")
-				.returningResultSet("p_out_data", new JabatanMapper());
+				.returningResultSet("p_out_data", new PenggunaMapper());
 		
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_nama", OracleTypes.VARCHAR));
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_start", OracleTypes.NUMBER));
@@ -77,9 +84,9 @@ public class JabatanServiceImpl implements JabatanService {
 		System.out.println("Result Code = " + result.get("p_out_errcode"));
 		System.out.println("Result Mesg = " + result.get("p_out_errmsg"));
 		
-		List<JabatanDto> data = null;
+		List<PenggunaDto> data = null;
 		if((Integer) result.get("p_out_errcode") == 0) {
-			data = (List<JabatanDto>) result.get("p_out_data");
+			data = (List<PenggunaDto>) result.get("p_out_data");
 			System.out.println("Result Data : ");
 			data.stream().forEach(x -> {
 				System.out.println("-> " + x.toString());
@@ -90,23 +97,29 @@ public class JabatanServiceImpl implements JabatanService {
 	}
 
 	@Override
-	public HttpRespModel update(JabatanDto dto) {
+	public HttpRespModel update(PenggunaDto dto) {
 		if(Objects.isNull(dto)) {
 			throw new CustomException("Missing object dto");
 		}
 		
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
-				.withCatalogName("PKG_JABATAN")
-				.withProcedureName("update_jabatan");
+				.withCatalogName("PKG_PENGGUNA")
+				.withProcedureName("update_pengguna");
 		
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_id", OracleTypes.NUMBER));
-		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_nama", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_username", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_password", OracleTypes.VARCHAR));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_jabatan", OracleTypes.NUMBER));
+		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_unit", OracleTypes.NUMBER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errmsg", OracleTypes.VARCHAR));
 		
 		SqlParameterSource inParam = new MapSqlParameterSource()
 				.addValue("p_in_id", dto.getId())
-				.addValue("p_in_nama", dto.getNamaJabatan());
+				.addValue("p_in_username", dto.getUsername())
+				.addValue("p_in_password", dto.getPassword())
+				.addValue("p_in_jabatan", dto.getJabatan().getId())
+				.addValue("p_in_unit", dto.getUnit().getId());
 		
 		Map<String, Object> result = jdbcCall.execute(inParam);
 		if((Integer) result.get("p_out_errcode") != 0) {
@@ -120,8 +133,8 @@ public class JabatanServiceImpl implements JabatanService {
 	@Override
 	public HttpRespModel delete(Long id) {
 		SimpleJdbcCall jdbcCall = new SimpleJdbcCall(dataSource)
-				.withCatalogName("PKG_JABATAN")
-				.withProcedureName("delete_jabatan");
+				.withCatalogName("PKG_PENGGUNA")
+				.withProcedureName("delete_pengguna");
 		
 		jdbcCall.addDeclaredParameter(new SqlParameter("p_in_id", OracleTypes.NUMBER));
 		jdbcCall.addDeclaredParameter(new SqlOutParameter("p_out_errcode", OracleTypes.INTEGER));
