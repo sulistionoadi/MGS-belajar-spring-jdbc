@@ -1,7 +1,15 @@
 package mgs.training.springboot.belajarjdbc.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import mgs.training.springboot.belajarjdbc.entity.TransaksiDetailPK;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TransaksiDetailDto {
 
     private TransaksiDetailPK id;
@@ -9,37 +17,4 @@ public class TransaksiDetailDto {
 	private String kodeBarang;
 	private Integer jumlah;
 
-	public TransaksiDetailPK getId() {
-		return id;
-	}
-
-	public void setId(TransaksiDetailPK id) {
-		this.id = id;
-	}
-
-	public TransaksiDto getTransaksi() {
-		return transaksi;
-	}
-
-	public void setTransaksi(TransaksiDto transaksi) {
-		this.transaksi = transaksi;
-	}
-
-	public String getKodeBarang() {
-		return kodeBarang;
-	}
-
-	public void setKodeBarang(String kodeBarang) {
-		this.kodeBarang = kodeBarang;
-	}
-
-	public Integer getJumlah() {
-		return jumlah;
-	}
-
-	public void setJumlah(Integer jumlah) {
-		this.jumlah = jumlah;
-	}
-	
-	
 }

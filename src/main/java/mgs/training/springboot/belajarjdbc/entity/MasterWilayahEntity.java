@@ -8,16 +8,22 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import mgs.training.springboot.belajarjdbc.dto.TransaksiDetailDto;
+import mgs.training.springboot.belajarjdbc.dto.TransaksiDto;
 
 @Entity
 @Table(name = "MASTER_WILAYAH")
-//@Getter @Setter
-@ToString
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MasterWilayahEntity {
 
 	@Id
@@ -35,36 +41,4 @@ public class MasterWilayahEntity {
 	@Column(name="IS_ACTIVE", columnDefinition = "NUMBER(1)")
 	private Boolean active;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getKode() {
-		return kode;
-	}
-
-	public void setKode(String kode) {
-		this.kode = kode;
-	}
-
-	public String getNama() {
-		return nama;
-	}
-
-	public void setNama(String nama) {
-		this.nama = nama;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-	
 }

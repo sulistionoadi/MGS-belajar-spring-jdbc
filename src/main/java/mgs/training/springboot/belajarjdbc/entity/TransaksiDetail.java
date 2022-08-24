@@ -8,8 +8,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name="TRANSAKSI_DETAIL")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TransaksiDetail {
 
 	@EmbeddedId
@@ -25,37 +34,4 @@ public class TransaksiDetail {
 	
 	private Integer jumlah;
 
-	public TransaksiDetailPK getId() {
-		return id;
-	}
-
-	public void setId(TransaksiDetailPK id) {
-		this.id = id;
-	}
-
-	public Transaksi getTransaksi() {
-		return transaksi;
-	}
-
-	public void setTransaksi(Transaksi transaksi) {
-		this.transaksi = transaksi;
-	}
-
-	public String getKodeBarang() {
-		return kodeBarang;
-	}
-
-	public void setKodeBarang(String kodeBarang) {
-		this.kodeBarang = kodeBarang;
-	}
-
-	public Integer getJumlah() {
-		return jumlah;
-	}
-
-	public void setJumlah(Integer jumlah) {
-		this.jumlah = jumlah;
-	}
-	
-	
 }

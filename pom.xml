@@ -18,6 +18,7 @@
 		<javax.validation.version>2.0.0.Final</javax.validation.version>
 		<org.apache.commons-lang.version>3.12.0</org.apache.commons-lang.version>
 		<org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
+		<org.projectlombok.version>1.18.24</org.projectlombok.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -43,8 +44,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.24</version>
-			<scope>provided</scope>
+			<version>${org.projectlombok.version}</version>
 			<optional>true</optional>
 		</dependency>
 
@@ -89,7 +89,36 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<!-- <version>3.5.1</version>-->
+				<version>3.5.1</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${org.projectlombok.version}</version>
+						</path>
+						<!-- This is needed when using Lombok 1.18.16 and above -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+						<!-- Mapstruct should follow the lombok path(s) -->
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -102,6 +131,7 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 
