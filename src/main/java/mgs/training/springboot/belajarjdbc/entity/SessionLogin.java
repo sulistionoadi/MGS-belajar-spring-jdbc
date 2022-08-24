@@ -1,5 +1,7 @@
 package mgs.training.springboot.belajarjdbc.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,26 +16,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "MASTER_WILAYAH")
+@Table(name="SESSION_LOGIN")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MasterWilayahEntity {
+public class SessionLogin {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wilayah_sequence")
-    @SequenceGenerator(sequenceName = "SEQ_MST_WILAYAH", allocationSize = 1, name = "wilayah_sequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_sequence")
+    @SequenceGenerator(sequenceName = "SEQ_SESSION", allocationSize = 1, name = "session_sequence")
 	@Column(name="ID")
 	private Long id;
+	private Date createdAt;
+	private Long userId;
+	@Column(columnDefinition = "VARCHAR2(4000)")
+	private String token;
 	
-	@Column(name="KODE_WIL", length = 20)
-	private String kode;
-	
-	@Column(name="NAMA_WIL", length = 50)
-	private String nama;
-	
-	@Column(name="IS_ACTIVE", columnDefinition = "NUMBER(1)")
-	private Boolean active;
-
 }

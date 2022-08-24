@@ -2,23 +2,20 @@ package mgs.training.springboot.belajarjdbc.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import lombok.extern.slf4j.Slf4j;
 import mgs.training.springboot.belajarjdbc.constant.ErrorCode;
 import mgs.training.springboot.belajarjdbc.dto.CustomException;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpRespModel;
 
 @RestControllerAdvice
-//@Slf4j
+@Slf4j
 public class ControllerAdvice {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
 	@ExceptionHandler
 	public ResponseEntity<Object> handle(MethodArgumentNotValidException exception) {
 		// you will get all javax failed validation, can be more than one

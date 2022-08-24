@@ -21,8 +21,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mgs.training.springboot.belajarjdbc.dto.TransaksiDetailDto;
-import mgs.training.springboot.belajarjdbc.dto.TransaksiDto;
 
 @Entity
 @Table(name="TRANSAKSI")

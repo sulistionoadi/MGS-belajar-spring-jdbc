@@ -1,22 +1,29 @@
 package mgs.training.springboot.belajarjdbc.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter
 @ToString
 @NoArgsConstructor
 public class PenggunaDto {
 
+	@Getter @Setter
 	private Long id;
+	@Getter @Setter
 	private String username;
+	@Setter
 	private String password;
+	@Getter @Setter
 	private boolean active;
 	
+	@Getter @Setter
 	private JabatanDto jabatan;
+	@Getter @Setter
 	private MasterUnitDto unit;
 
 	@Builder
@@ -30,4 +37,9 @@ public class PenggunaDto {
 		this.unit = unit;
 	}
 
+	@JsonIgnore
+	public String getPassword() {
+		return password;
+	}
+	
 }
