@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import mgs.training.springboot.belajarjdbc.dto.LoginDto;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpRespModel;
+import mgs.training.springboot.belajarjdbc.dto.login.LoginDto;
 import mgs.training.springboot.belajarjdbc.service.LoginService;
 
 @RestController

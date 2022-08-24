@@ -1,4 +1,4 @@
-package mgs.training.springboot.belajarjdbc.dto;
+package mgs.training.springboot.belajarjdbc.dto.login;
 
 import java.util.Date;
 

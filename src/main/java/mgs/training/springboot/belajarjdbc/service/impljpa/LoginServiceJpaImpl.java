@@ -1,7 +1,16 @@
 package mgs.training.springboot.belajarjdbc.service.impljpa;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,11 +21,15 @@ import lombok.extern.slf4j.Slf4j;
 import mgs.training.springboot.belajarjdbc.constant.ErrorCode;
 import mgs.training.springboot.belajarjdbc.dao.PenggunaDao;
 import mgs.training.springboot.belajarjdbc.dao.SessionLoginDao;
-import mgs.training.springboot.belajarjdbc.dto.LoginDto;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpRespModel;
+import mgs.training.springboot.belajarjdbc.dto.login.LoginDto;
+import mgs.training.springboot.belajarjdbc.dto.login.UserAuthorityDto;
+import mgs.training.springboot.belajarjdbc.entity.MenuEntity;
 import mgs.training.springboot.belajarjdbc.entity.PenggunaEntity;
 import mgs.training.springboot.belajarjdbc.entity.SessionLogin;
+import mgs.training.springboot.belajarjdbc.service.AppCacheService;
 import mgs.training.springboot.belajarjdbc.service.LoginService;
+import mgs.training.springboot.belajarjdbc.util.AuthUtil;
 import mgs.training.springboot.belajarjdbc.util.JwtTokenUtil;
 
 @Service("loginJpaService")
@@ -30,12 +43,15 @@ public class LoginServiceJpaImpl implements LoginService {
 	private final PenggunaDao penggunaDao;
 	private final PasswordEncoder encoder;
 	private final JwtTokenUtil jwtUtil;
+	private final AppCacheService cacheService;
 	
-	public LoginServiceJpaImpl(SessionLoginDao dao, PenggunaDao penggunaDao, PasswordEncoder encoder, JwtTokenUtil jwtUtil) {
+	public LoginServiceJpaImpl(SessionLoginDao dao, PenggunaDao penggunaDao, PasswordEncoder encoder, JwtTokenUtil jwtUtil, 
+			AppCacheService cacheService) {
 		this.dao = dao;
 		this.penggunaDao = penggunaDao;
 		this.encoder = encoder;
 		this.jwtUtil = jwtUtil;
+		this.cacheService = cacheService;
 	}
 
 	@Override
@@ -69,7 +85,28 @@ public class LoginServiceJpaImpl implements LoginService {
 		session.setToken(token);
 		dao.save(session);
 		
+		UserAuthorityDto authorityDto = setAuthoritiesAndPermittedMenu(pengguna);
+		cacheService.putGroupPrivilege(pengguna.getUsername(), authorityDto);
 		return HttpRespModel.ok(profile);
+	}
+	
+	private UserAuthorityDto setAuthoritiesAndPermittedMenu(PenggunaEntity pengguna) {
+		List<String> listAuthorities = new ArrayList<>();
+		List<String> permittedAction = new ArrayList<>();
+		Queue<MenuEntity> dequeMenu = new LinkedList<>();
+		Map<Long, MenuEntity> mapMenu = new HashMap<>();
+
+		log.debug("User:{} ", pengguna.getUsername());
+		log.debug("has {} permittedMenu", pengguna.getJabatan().getMenuSet().size());
+        pengguna.getJabatan().getMenuSet().stream().filter(MenuEntity::getActive).collect(Collectors.toSet()).
+                forEach(menu -> {
+                	listAuthorities.add(menu.getMenuLink());
+        });
+
+		UserAuthorityDto authorityDto = AuthUtil.buildObjectUserAuthority(listAuthorities);
+		authorityDto.setUserId(pengguna.getId());
+		authorityDto.setUsername(pengguna.getUsername());
+		return authorityDto;
 	}
 
 	@Override

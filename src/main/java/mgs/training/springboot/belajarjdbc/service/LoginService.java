@@ -1,7 +1,7 @@
 package mgs.training.springboot.belajarjdbc.service;
 
-import mgs.training.springboot.belajarjdbc.dto.LoginDto;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpRespModel;
+import mgs.training.springboot.belajarjdbc.dto.login.LoginDto;
 
 public interface LoginService {
 

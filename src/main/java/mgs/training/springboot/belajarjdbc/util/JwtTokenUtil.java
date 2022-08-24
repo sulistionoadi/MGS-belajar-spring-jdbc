@@ -18,7 +18,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import mgs.training.springboot.belajarjdbc.constant.ErrorCode;
 import mgs.training.springboot.belajarjdbc.dto.CustomException;
-import mgs.training.springboot.belajarjdbc.dto.LoginDto;
+import mgs.training.springboot.belajarjdbc.dto.login.LoginDto;
 
 @Component
 @Slf4j
