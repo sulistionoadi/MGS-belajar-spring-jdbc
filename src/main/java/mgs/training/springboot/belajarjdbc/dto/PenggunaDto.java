@@ -8,22 +8,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Getter @Setter
 @ToString
 @NoArgsConstructor
 public class PenggunaDto {
 
-	@Getter @Setter
 	private Long id;
-	@Getter @Setter
 	private String username;
-	@Setter
 	private String password;
-	@Getter @Setter
 	private boolean active;
 	
-	@Getter @Setter
 	private JabatanDto jabatan;
-	@Getter @Setter
 	private MasterUnitDto unit;
 
 	@Builder
