@@ -3,10 +3,21 @@ package mgs.training.springboot.belajarjdbc.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import mgs.training.springboot.belajarjdbc.constant.ErrorCode;
+import mgs.training.springboot.belajarjdbc.dto.CustomException;
+import mgs.training.springboot.belajarjdbc.dto.login.LoginDto;
 import mgs.training.springboot.belajarjdbc.dto.login.UserAuthorityDto;
 
 public class AuthUtil {
 
+	public static LoginDto getProfile() {
+		LoginDto dto = (LoginDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(dto==null) throw new CustomException(ErrorCode.UNAUTHENTICATED, "Invalid Session");
+		return dto;
+	}
+	
 	public static UserAuthorityDto buildObjectUserAuthority(List<String> listAuthorities) {
 		List<String> urlByMethodExact = new ArrayList<>();
 		List<String> urlByMethodStartWith = new ArrayList<>();

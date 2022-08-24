@@ -19,6 +19,7 @@ import mgs.training.springboot.belajarjdbc.entity.TransaksiDetail;
 import mgs.training.springboot.belajarjdbc.entity.TransaksiDetailPK;
 import mgs.training.springboot.belajarjdbc.mapper.mapstruct.TransaksiMapper;
 import mgs.training.springboot.belajarjdbc.service.TransaksiService;
+import mgs.training.springboot.belajarjdbc.util.AuthUtil;
 
 @Service("transaksiJpaService")
 public class TransaksiServiceJpaImpl implements TransaksiService {
@@ -36,7 +37,7 @@ public class TransaksiServiceJpaImpl implements TransaksiService {
 	public HttpRespModel save(TransaksiDto dto) {
 		Transaksi toSave = mapper.toEntity(dto);
 		toSave.setCreatedAt(new Date());
-		toSave.setCreatedBy("SYSTEM");
+		toSave.setCreatedBy(AuthUtil.getProfile().getUsername());
 		
 		List<TransaksiDetail> details = new ArrayList<TransaksiDetail>();
 		dto.getDetail().forEach(d -> {
