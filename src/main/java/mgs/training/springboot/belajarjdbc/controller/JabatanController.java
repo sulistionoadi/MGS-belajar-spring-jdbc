@@ -1,5 +1,7 @@
 package mgs.training.springboot.belajarjdbc.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import mgs.training.springboot.belajarjdbc.dto.CustomException;
 import mgs.training.springboot.belajarjdbc.dto.JabatanDto;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpPagedModel;
 import mgs.training.springboot.belajarjdbc.dto.http.HttpRespModel;
@@ -71,5 +75,23 @@ public class JabatanController {
 			return jabatanService.save(dto);			
 		}
 	}
+	
+//	@RequestMapping(name = "/download", method=RequestMethod.GET, produces = "text/plain")
+//	public String downloadDataJabatan(
+//			@RequestParam(name = "filter", required = false) String filter,
+//            @PageableDefault(direction = Sort.Direction.DESC, sort="id") Pageable pageable){
+//		HttpPagedModel<JabatanDto> model = jabatanService.getData(filter, pageable);
+//		if(!model.isSuccess()) {
+//			throw new CustomException(model.getCode(), model.getMessage());
+//		}
+//		
+//		StringBuilder builder = new StringBuilder();
+//		List<JabatanDto> data = model.getData();
+//		data.stream().forEach(d -> {
+//			builder.append(d.getId()).append(";").append(d.getNamaJabatan()).append(";").append(d.getActive()).append("\n");
+//		});
+//		
+//		return builder.toString();
+//	}
 	
 }
